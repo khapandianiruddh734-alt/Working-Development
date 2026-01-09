@@ -17,7 +17,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.flare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src='https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js'></script>
 </head>
 <body class="text-gray-800 min-h-screen flex flex-col">
@@ -132,9 +132,9 @@
 
             <div id="compress-options-area" class="hidden mt-8 text-left bg-gray-50 p-6 rounded-lg border border-gray-200">
                 <h4 class="font-bold text-gray-700 mb-4">Compression Settings:</h4>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Image Quality: <span id="quality-value">90%</span></label>
-                <input type="range" id="quality-slider" min="70" max="95" value="90" step="5" class="w-full">
-                <p class="text-xs text-gray-500 mt-2">Higher quality preserves text sharpness but results in larger files.</p>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Image Quality: <span id="quality-value">95%</span></label>
+                <input type="range" id="quality-slider" min="80" max="100" value="95" step="5" class="w-full">
+                <p class="text-xs text-gray-500 mt-2">Higher quality preserves text sharpness but results in larger files. Recommended for text-heavy PDFs.</p>
                 <button onclick="startCompress()" class="mt-4 bg-indigo-600 text-white px-8 py-3 rounded-lg shadow hover:bg-indigo-700 font-bold transition">Compress PDF</button>
             </div>
 

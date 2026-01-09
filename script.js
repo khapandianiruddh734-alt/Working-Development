@@ -387,7 +387,7 @@ async function compressPDF(files) {
     
     for (let i = 1; i <= pdf.numPages; i++) {
         const page = await pdf.getPage(i);
-        const viewport = page.getViewport({ scale: 1.5 });  // Higher scale for better text quality
+        const viewport = page.getViewport({ scale: 2.0 });  // Higher scale for better text quality
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
         canvas.width = viewport.width;
