@@ -375,39 +375,61 @@ function readImageDimensions(file) {
 }
 
 async function compressPDF(files) {
-    const file = files[0];
-    const originalSize = file.size;
-    const quality = document.getElementById('quality-slider').value / 100;
-    const data = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument(data).promise;
-    const doc = new window.jspdf.jsPDF();
-    
-    document.getElementById('progress-bar').classList.remove('hidden');
-    document.getElementById('total-pages').innerText = pdf.numPages;
-    
-    for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const viewport = page.getViewport({ scale: 2.0 });  // Higher scale for better text quality
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-        await page.render({ canvasContext: context, viewport: viewport }).promise;
-        const imgData = canvas.toDataURL('image/jpeg', quality);
-        if (i > 1) doc.addPage([viewport.width, viewport.height]);
-        else { doc.internal.pageSize.width = viewport.width; doc.internal.pageSize.height = viewport.height; }
-        doc.addImage(imgData, 'JPEG', 0, 0, viewport.width, viewport.height);
+    try {
+        console.log('Starting PDF compression');
+        const file = files[0];
+        const originalSize = file.size;
+        console.log('Original file size:', originalSize);
+        if (originalSize > 50 * 1024 * 1024) {
+            throw new Error('File too large. Please use a PDF under 50MB.');
+        }
+        const quality = document.getElementById('quality-slider').value / 100;
+        console.log('Quality:', quality);
+        const data = await file.arrayBuffer();
+        console.log('Loaded file data');
+        const pdf = await pdfjsLib.getDocument(data).promise;
+        console.log('PDF loaded, pages:', pdf.numPages);
+        const doc = new window.jspdf.jsPDF();
         
-        document.getElementById('current-page').innerText = i;
-        document.getElementById('progress-fill').style.width = (i / pdf.numPages * 100) + '%';
+        document.getElementById('progress-bar').classList.remove('hidden');
+        document.getElementById('total-pages').innerText = pdf.numPages;
+        
+        for (let i = 1; i <= pdf.numPages; i++) {
+            console.log('Processing page', i);
+            const page = await pdf.getPage(i);
+            const viewport = page.getViewport({ scale: 1.5 });  // Reduced scale for stability
+            console.log('Viewport:', viewport.width, viewport.height);
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            await page.render({ canvasContext: context, viewport: viewport }).promise;
+            console.log('Page rendered to canvas');
+            const imgData = canvas.toDataURL('image/jpeg', quality);
+            console.log('Image data created, length:', imgData.length);
+            if (i > 1) doc.addPage([viewport.width, viewport.height]);
+            else { doc.internal.pageSize.width = viewport.width; doc.internal.pageSize.height = viewport.height; }
+            doc.addImage(imgData, 'JPEG', 0, 0, viewport.width, viewport.height);
+            console.log('Image added to PDF');
+            
+            document.getElementById('current-page').innerText = i;
+            document.getElementById('progress-fill').style.width = (i / pdf.numPages * 100) + '%';
+        }
+        
+        document.getElementById('progress-bar').classList.add('hidden');
+        const compressedBlob = doc.output('blob');
+        const compressedSize = compressedBlob.size;
+        const savings = ((originalSize - compressedSize) / originalSize * 100).toFixed(1);
+        document.getElementById('success-details').innerText = `Compressed from ${(originalSize / 1024 / 1024).toFixed(2)} MB to ${(compressedSize / 1024 / 1024).toFixed(2)} MB (${savings}% reduction)!`;
+        console.log('Compression complete, sizes:', originalSize, compressedSize);
+        setupDownload(compressedBlob, "compressed.pdf");
+    } catch (error) {
+        console.error('Error in compressPDF:', error);
+        document.getElementById('progress-bar').classList.add('hidden');
+        document.getElementById('error-msg').innerText = "Error: " + error.message;
+        document.getElementById('error-msg').classList.remove('hidden');
+        document.getElementById('drop-area').classList.remove('hidden');
     }
-    
-    document.getElementById('progress-bar').classList.add('hidden');
-    const compressedBlob = doc.output('blob');
-    const compressedSize = compressedBlob.size;
-    const savings = ((originalSize - compressedSize) / originalSize * 100).toFixed(1);
-    document.getElementById('success-details').innerText = `Compressed from ${(originalSize / 1024 / 1024).toFixed(2)} MB to ${(compressedSize / 1024 / 1024).toFixed(2)} MB (${savings}% reduction)!`;
-    setupDownload(compressedBlob, "compressed.pdf");
 }
 
 async function cleanExcelFile(files) {
