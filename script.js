@@ -389,6 +389,9 @@ async function compressPDF(files) {
         console.log('Loaded file data');
         const pdf = await pdfjsLib.getDocument(data).promise;
         console.log('PDF loaded, pages:', pdf.numPages);
+        if (pdf.numPages > 50) {
+            throw new Error('PDF has too many pages. Please use a PDF with 50 pages or fewer.');
+        }
         const doc = new window.jspdf.jsPDF();
         
         document.getElementById('progress-bar').classList.remove('hidden');
@@ -397,7 +400,7 @@ async function compressPDF(files) {
         for (let i = 1; i <= pdf.numPages; i++) {
             console.log('Processing page', i);
             const page = await pdf.getPage(i);
-            const viewport = page.getViewport({ scale: 1.5 });  // Reduced scale for stability
+            const viewport = page.getViewport({ scale: 1.0 });  // Standard scale for compatibility
             console.log('Viewport:', viewport.width, viewport.height);
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
