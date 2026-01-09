@@ -6,6 +6,16 @@
     <title>The Achievers | Data Entry Made Effortless</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Suppress Tailwind CDN production warning for GitHub Pages deployment
+        console.warn = (function(warn) {
+            return function(message) {
+                if (!message.includes('cdn.tailwindcss.com should not be used in production')) {
+                    warn.apply(console, arguments);
+                }
+            };
+        })(console.warn);
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     
