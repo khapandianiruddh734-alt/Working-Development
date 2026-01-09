@@ -110,7 +110,12 @@ async function handleFile(files) {
     }
 
     if (currentTool.id === 'compress-pdf') {
-        if (files[0].size > 50 * 1024 * 1024) {
+        const file = files[0];
+        if (file.type !== 'application/pdf') {
+            alert('Please select a valid PDF file.');
+            return;
+        }
+        if (file.size > 50 * 1024 * 1024) {
             alert("File too large. Please use a PDF under 50MB.");
             return;
         }
@@ -376,6 +381,9 @@ function readImageDimensions(file) {
 
 async function compressPDF(files) {
     try {
+        if (typeof pdfjsLib === 'undefined') {
+            throw new Error('PDF.js library not loaded. Please refresh the page.');
+        }
         console.log('Starting PDF compression');
         const file = files[0];
         const originalSize = file.size;
