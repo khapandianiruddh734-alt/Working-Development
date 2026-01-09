@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Achievers | Data Entry Made Effortless</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.flare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src='https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js'></script>
+</head>
+<body class="text-gray-800 min-h-screen flex flex-col">
+
+    <nav class="bg-white shadow z-50">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center cursor-pointer" onclick="location.reload()">
+                    <span class="text-2xl font-bold text-indigo-600">The <span class="text-gray-800">Achievers</span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex-grow max-w-7xl mx-auto px-4 py-12 w-full">
+        <div id="menu-view">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div>
+                    <h2 class="text-gray-500 font-bold tracking-wider text-sm mb-4 uppercase">PDF Tools</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div onclick="loadTool('jpg-to-pdf')" class="tool-card bg-white p-4 rounded-lg shadow cursor-pointer flex items-center space-x-4 border-l-4 border-yellow-500">
+                            <div class="bg-yellow-100 p-3 rounded text-yellow-600">🖼️</div>
+                            <div><h3 class="font-bold">JPG to PDF</h3><p class="text-xs text-gray-400">Combine multiple images</p></div>
+                        </div>
+                        <div onclick="loadTool('word-to-pdf')" class="tool-card bg-white p-4 rounded-lg shadow cursor-pointer flex items-center space-x-4">
+                            <div class="bg-blue-100 p-3 rounded text-blue-600">📝</div>
+                            <div><h3 class="font-bold">WORD to PDF</h3></div>
+                        </div>
+                        <div onclick="loadTool('pdf-to-jpg')" class="tool-card bg-white p-4 rounded-lg shadow cursor-pointer flex items-center space-x-4">
+                            <div class="bg-red-100 p-3 rounded text-red-600">📄</div>
+                            <div><h3 class="font-bold">PDF to JPG</h3></div>
+                        </div>
+                        <div onclick="loadTool('compress-pdf')" class="tool-card bg-white p-4 rounded-lg shadow cursor-pointer flex items-center space-x-4">
+                            <div class="bg-teal-100 p-3 rounded text-teal-600">📉</div>
+                            <div><h3 class="font-bold">Compress PDF</h3><p class="text-xs text-gray-400">Reduce file size, preserve text quality</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-gray-500 font-bold tracking-wider text-sm mb-4 uppercase">Data Tools</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div onclick="loadTool('excel-to-pdf')" class="tool-card bg-white p-4 rounded-lg shadow cursor-pointer flex items-center space-x-4">
+                            <div class="bg-green-100 p-3 rounded text-green-600">📊</div>
+                            <div><h3 class="font-bold">EXCEL to PDF</h3></div>
+                        </div>
+                        <div onclick="loadTool('clean-excel')" class="tool-card bg-white p-4 rounded-lg shadow cursor-pointer flex items-center space-x-4">
+                            <div class="bg-indigo-100 p-3 rounded text-indigo-600">🧹</div>
+                            <div><h3 class="font-bold">Clean Excel</h3><p class="text-xs text-gray-400">Remove Special Characters</p></div>
+                        </div>
+                        <div onclick="loadTool('duplicate-remover')" class="tool-card bg-white p-4 rounded-lg shadow cursor-pointer flex items-center space-x-4">
+                            <div class="bg-orange-100 p-3 rounded text-orange-600">📋</div>
+                            <div><h3 class="font-bold">Duplicate Remover</h3><p class="text-xs text-gray-400">Clean/Highlight Duplicates</p></div>
+                        </div>
+                        <div onclick="loadTool('pdf-image-to-excel')" class="tool-card bg-white p-4 rounded-lg shadow cursor-pointer flex items-center space-x-4">
+                            <div class="bg-purple-100 p-3 rounded text-purple-600">👁️</div>
+                            <div><h3 class="font-bold">PDF/Img to Excel</h3></div>
+                        </div>
+                        <div onclick="loadTool('menu-fixer')" class="tool-card bg-white p-4 rounded-lg shadow cursor-pointer flex items-center space-x-4 border-l-4 border-pink-500">
+                            <div class="bg-pink-100 p-3 rounded text-pink-600">🍔</div>
+                            <div><h3 class="font-bold">Menu Fixer (Beta)</h3><p class="text-xs text-gray-400">Fix Spellings</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="workspace-view" class="hidden bg-white rounded-xl shadow-lg border border-gray-100 p-8 text-center max-w-3xl mx-auto mt-8">
+            <button onclick="location.reload()" class="text-sm text-indigo-500 hover:underline mb-6 block text-left">← Back to All Tools</button>
+            
+            <h1 id="tool-title" class="text-3xl font-bold text-gray-800 mb-2">Tool Name</h1>
+            <p id="tool-desc" class="text-gray-500 mb-8">Description</p>
+
+            <div id="drop-area" class="border-2 border-dashed border-indigo-300 rounded-xl bg-indigo-50 p-12 cursor-pointer hover:bg-indigo-100 transition" onclick="document.getElementById('file-input').click()">
+                <div class="flex flex-col items-center">
+                    <svg class="w-12 h-12 text-indigo-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                    <span class="text-lg font-semibold text-indigo-900">Click to Add File(s)</span>
+                    <span class="text-sm text-indigo-600 mt-1" id="file-formats">Supported formats...</span>
+                </div>
+                <input type="file" id="file-input" class="hidden" onchange="handleFile(this.files)">
+            </div>
+
+            <div id="preview-area" class="hidden mt-8">
+                <h3 class="text-gray-700 font-bold mb-4">Selected Images:</h3>
+                <div id="preview-grid" class="grid grid-cols-3 sm:grid-cols-4 gap-4 mb-6"></div>
+                <button id="start-convert-btn" onclick="startProcessing()" class="bg-indigo-600 text-white px-8 py-3 rounded-lg shadow hover:bg-indigo-700 font-bold transition w-full sm:w-auto">
+                    Convert these Images to PDF now
+                </button>
+            </div>
+
+            <div id="dup-options-area" class="hidden mt-8 text-left bg-gray-50 p-6 rounded-lg border border-gray-200">
+                <h4 class="font-bold text-gray-700 mb-4">Duplicate Criteria:</h4>
+                <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                    <label class="flex items-center cursor-pointer">
+                        <input type="radio" name="dup-criteria" value="row" checked class="w-4 h-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                        <span class="ml-2 text-gray-700 font-medium">Exact Row Match (Safe)</span>
+                    </label>
+                    <label class="flex items-center cursor-pointer">
+                        <input type="radio" name="dup-criteria" value="col1" class="w-4 h-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                        <span class="ml-2 text-gray-700 font-medium">First Column Only</span>
+                    </label>
+                </div>
+                <div class="flex gap-4">
+                    <button onclick="processDuplicateData('highlight')" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded transition flex justify-center items-center gap-2">
+                        <i class="fas fa-highlighter"></i> Highlight Duplicates
+                    </button>
+                    <button onclick="processDuplicateData('remove')" class="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition flex justify-center items-center gap-2">
+                        <i class="fas fa-trash"></i> Remove Rows
+                    </button>
+                </div>
+            </div>
+
+            <div id="compress-options-area" class="hidden mt-8 text-left bg-gray-50 p-6 rounded-lg border border-gray-200">
+                <h4 class="font-bold text-gray-700 mb-4">Compression Settings:</h4>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Image Quality: <span id="quality-value">90%</span></label>
+                <input type="range" id="quality-slider" min="70" max="95" value="90" step="5" class="w-full">
+                <p class="text-xs text-gray-500 mt-2">Higher quality preserves text sharpness but results in larger files.</p>
+                <button onclick="startCompress()" class="mt-4 bg-indigo-600 text-white px-8 py-3 rounded-lg shadow hover:bg-indigo-700 font-bold transition">Compress PDF</button>
+            </div>
+
+            <div id="status-area" class="mt-8 hidden">
+                <div id="loading-spinner" class="hidden flex justify-center items-center mb-4">
+                    <div class="loader"></div><span class="ml-3 text-indigo-600 font-medium">Processing...</span>
+                </div>
+                <div id="progress-bar" class="hidden mt-4">
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div id="progress-fill" class="bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">Processing page <span id="current-page">0</span> of <span id="total-pages">0</span>...</p>
+                </div>
+                <div id="success-msg" class="hidden">
+                    <p class="text-green-600 font-bold text-lg mb-4">🎉 Process Complete!</p>
+                    <p id="success-details" class="text-sm text-gray-500 mb-4"></p>
+                    <button id="download-btn" class="bg-indigo-600 text-white px-8 py-3 rounded-lg shadow hover:bg-indigo-700 font-bold transition">Download Result</button>
+                </div>
+                <p id="error-msg" class="text-red-500 mt-4 hidden"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
